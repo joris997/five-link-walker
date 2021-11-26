@@ -1,8 +1,11 @@
 # five-link-walker
-Stable locomotion using IO linearization, RES-CLFs, and TSC
+Stable locomotion using IO linearization, CLFs, and TSC. This was initially made to get a better understanding of bipedal robotic locomotion and get familiar with some of the 'standard' basic control approaches to  5-link walkers. These 5-link walkers are close to being the easiest, morphologically sound walker. For a detailed description of the biped in question, please refer to [1] which is well documented
+
+The 5-link walker code ('main.m') allows for setting a down-step height to analyze part of the robustness
 
 ## System of equations
 We consider a standard system of equations.
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot{x}&space;=&space;f(x)&space;&plus;&space;g(x)u" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot{x}&space;=&space;f(x)&space;&plus;&space;g(x)u" title="\dot{x} = f(x) + g(x)u" /></a>
 
 where
@@ -11,7 +14,7 @@ where
 
 
 ## Input-output linearization
-According to [1]
+According to [2]
 
 $h$ is defined as the difference between the actual outputs (a linear mapping of the state, identity in this instance) and the desired outputs, obtained from the offline trajectory optimization using HZD.
 
@@ -41,17 +44,25 @@ Mapping to the actual output
 
 
 ## RES-CLFs
-According to [2]
+According to [3]
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\eta&space;=&space;\begin{bmatrix}&space;h&space;\\&space;L_fh&space;\end{bmatrix}\\&space;F&space;=&space;\begin{bmatrix}&space;0&space;&&space;I&space;\\&space;0&space;&&space;0\end{bmatrix}\\&space;G&space;=&space;\begin{bmatrix}&space;0&space;\\&space;I&space;\end{bmatrix}\\&space;I_{\epsilon}&space;=&space;diag(\frac{1}{\epsilon}[M\times1],1[M\times1])\\&space;Q&space;=&space;I[2M]\\&space;P&space;=&space;icare(F,G,Q)\\&space;P_{\epsilon}&space;=&space;I_{\epsilon}PI_{\epsilon}\\&space;V&space;=&space;\eta^TP_{\epsilon}\eta\\&space;L_{FV}&space;=&space;\eta^T&space;(F^T&space;P_{\epsilon}&space;&plus;&space;P_{\epsilon}F)\eta&space;\\&space;L_{GV}&space;=&space;2\eta^TP_{\epsilon}G\\\\&space;minimize&space;(L_gL_fhu&space;&plus;&space;L_fL_fh)^T(L_gL_fhu&space;&plus;&space;L_fL_fh)&space;&plus;&space;\delta^2\\&space;s.t.&space;(L_{FV}&space;&plus;&space;L{GV}(L_gL_fhu&space;&plus;&space;L_fL_fh))&space;\leq&space;-\frac{1}{\epsilon}&space;\frac{min(eig(Q))}{max(eig(P))}V&space;&plus;&space;\delta" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\eta&space;=&space;\begin{bmatrix}&space;h&space;\\&space;L_fh&space;\end{bmatrix}\\&space;F&space;=&space;\begin{bmatrix}&space;0&space;&&space;I&space;\\&space;0&space;&&space;0\end{bmatrix}\\&space;G&space;=&space;\begin{bmatrix}&space;0&space;\\&space;I&space;\end{bmatrix}\\&space;I_{\epsilon}&space;=&space;diag(\frac{1}{\epsilon}[M\times1],1[M\times1])\\&space;Q&space;=&space;I[2M]\\&space;P&space;=&space;icare(F,G,Q)\\&space;P_{\epsilon}&space;=&space;I_{\epsilon}PI_{\epsilon}\\&space;V&space;=&space;\eta^TP_{\epsilon}\eta\\&space;L_{FV}&space;=&space;\eta^T&space;(F^T&space;P_{\epsilon}&space;&plus;&space;P_{\epsilon}F)\eta&space;\\&space;L_{GV}&space;=&space;2\eta^TP_{\epsilon}G\\\\&space;minimize&space;(L_gL_fhu&space;&plus;&space;L_fL_fh)^T(L_gL_fhu&space;&plus;&space;L_fL_fh)&space;&plus;&space;\delta^2\\&space;s.t.&space;(L_{FV}&space;&plus;&space;L{GV}(L_gL_fhu&space;&plus;&space;L_fL_fh))&space;\leq&space;-\frac{1}{\epsilon}&space;\frac{min(eig(Q))}{max(eig(P))}V&space;&plus;&space;\delta" title="\eta = \begin{bmatrix} h \\ L_fh \end{bmatrix}\\ F = \begin{bmatrix} 0 & I \\ 0 & 0\end{bmatrix}\\ G = \begin{bmatrix} 0 \\ I \end{bmatrix}\\ I_{\epsilon} = diag(\frac{1}{\epsilon}[M\times1],1[M\times1])\\ Q = I[2M]\\ P = icare(F,G,Q)\\ P_{\epsilon} = I_{\epsilon}PI_{\epsilon}\\ V = \eta^TP_{\epsilon}\eta\\ L_{FV} = \eta^T (F^T P_{\epsilon} + P_{\epsilon}F)\eta \\ L_{GV} = 2\eta^TP_{\epsilon}G\\\\ minimize (L_gL_fhu + L_fL_fh)^T(L_gL_fhu + L_fL_fh) + \delta^2\\ s.t. (L_{FV} + L{GV}(L_gL_fhu + L_fL_fh)) \leq -\frac{1}{\epsilon} \frac{min(eig(Q))}{max(eig(P))}V + \delta" /></a>
 
 
 ## TSC
-According to [3]
+According to [4]
 
 
 ## Sources
-1: 
+1:
+@book{westervelt2018feedback,
+  title={Feedback control of dynamic bipedal robot locomotion},
+  author={Westervelt, Eric R and Grizzle, Jessy W and Chevallereau, Christine and Choi, Jun Ho and Morris, Benjamin},
+  year={2018},
+  publisher={CRC press}
+}
+
+2: 
 @article{westervelt2003hybrid,
   title={Hybrid zero dynamics of planar biped walkers},
   author={Westervelt, Eric R and Grizzle, Jessy W and Koditschek, Daniel E},
@@ -63,7 +74,7 @@ According to [3]
   publisher={IEEE}
 }
 
-2:
+3:
 @article{ames2014rapidly,
   title={Rapidly exponentially stabilizing control lyapunov functions and hybrid zero dynamics},
   author={Ames, Aaron D and Galloway, Kevin and Sreenath, Koushil and Grizzle, Jessy W},
@@ -75,7 +86,7 @@ According to [3]
   publisher={IEEE}
 }
 
-3:
+4:
 @inproceedings{wensing2013generation,
   title={Generation of dynamic humanoid behaviors through task-space control with conic optimization},
   author={Wensing, Patrick M and Orin, David E},
