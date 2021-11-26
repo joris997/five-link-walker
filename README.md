@@ -46,7 +46,7 @@ According to [3]
 
 
 ## Sources
-[1]: 
+1: 
 @article{westervelt2003hybrid,
   title={Hybrid zero dynamics of planar biped walkers},
   author={Westervelt, Eric R and Grizzle, Jessy W and Koditschek, Daniel E},
@@ -56,6 +56,28 @@ According to [3]
   pages={42--56},
   year={2003},
   publisher={IEEE}
+}
+
+2:
+@article{ames2014rapidly,
+  title={Rapidly exponentially stabilizing control lyapunov functions and hybrid zero dynamics},
+  author={Ames, Aaron D and Galloway, Kevin and Sreenath, Koushil and Grizzle, Jessy W},
+  journal={IEEE Transactions on Automatic Control},
+  volume={59},
+  number={4},
+  pages={876--891},
+  year={2014},
+  publisher={IEEE}
+}
+
+3:
+@inproceedings{wensing2013generation,
+  title={Generation of dynamic humanoid behaviors through task-space control with conic optimization},
+  author={Wensing, Patrick M and Orin, David E},
+  booktitle={2013 IEEE International Conference on Robotics and Automation},
+  pages={3103--3109},
+  year={2013},
+  organization={IEEE}
 }
 
 
