@@ -8,6 +8,8 @@ The 5-link walker code ('main.m') allows for setting a down-step height to analy
 ## Usage:
 Just run 'main.m'. You can change the controller type before the main loop by changing the string 'controller' on line 100. If you wish to make changes to the underlying biped model, make the changes in 'generate.m' and run it again (this will take a long time with symbolic equations and simplyfing them!).
 
+For the CLF and TSC controller, you will need [CVX](http://cvxr.com/cvx/).
+
 ## System of equations
 We consider a standard system of equations.
 
