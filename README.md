@@ -9,22 +9,31 @@ Stable locomotion using IO linearization, RES-CLFs, and TSC
 According to SOURCE
 
 $h$ is defined as the difference between the actual outputs (a linear mapping of the state, identity in this instance) and the desired outputs, obtained from the offline trajectory optimization using HZD.
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=h&space;=&space;H_0q&space;-&space;h_d" target="_blank"><img src="https://latex.codecogs.com/gif.latex?h&space;=&space;H_0q&space;-&space;h_d" title="h = H_0q - h_d" /></a>
 
 Lie derivative of the outputs.
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=L_fh&space;=&space;(H_0&space;-&space;\frac{dh}{dt}c)\dot{q}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_fh&space;=&space;(H_0&space;-&space;\frac{dh}{dt}c)\dot{q}" title="L_fh = (H_0 - \frac{dh}{dt}c)\dot{q}" /></a>
 
 Second Lie derivative with respect to the controlled PDE
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=L_gL_fh&space;=&space;(H_0&space;-&space;\frac{dh}{dt}c)D^{-1}B" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_gL_fh&space;=&space;(H_0&space;-&space;\frac{dh}{dt}c)D^{-1}B" title="L_gL_fh = (H_0 - \frac{dh}{dt}c)D^{-1}B" /></a>
 
 Second Lie derivative with respect to the autonomous PDE
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=L_fL_fh&space;=&space;-\frac{d^2h}{dt^2}(c&space;q)^2&space;&plus;&space;(H_0&space;-&space;\frac{dh}{dt}c)D^{-1}F_{vec}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?L_fL_fh&space;=&space;-\frac{d^2h}{dt^2}(c&space;q)^2&space;&plus;&space;(H_0&space;-&space;\frac{dh}{dt}c)D^{-1}F_{vec}" title="L_fL_fh = -\frac{d^2h}{dt^2}(c q)^2 + (H_0 - \frac{dh}{dt}c)D^{-1}F_{vec}" /></a>
 
 Auxilliary output
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=v&space;=&space;-(1/\epsilon)K_D&space;L_fh&space;-&space;(1/\epsilon^2)K_Ph" target="_blank"><img src="https://latex.codecogs.com/gif.latex?v&space;=&space;-(1/\epsilon)K_D&space;L_fh&space;-&space;(1/\epsilon^2)K_Ph" title="v = -(1/\epsilon)K_D L_fh - (1/\epsilon^2)K_Ph" /></a>
 
 Mapping to the actual output
+
 <a href="https://www.codecogs.com/eqnedit.php?latex=u&space;=&space;L_gL_fh^{-1}(v&space;-&space;L_fL_fh)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?u&space;=&space;L_gL_fh^{-1}(v&space;-&space;L_fL_fh)" title="u = L_gL_fh^{-1}(v - L_fL_fh)" /></a>
+
+
+
 
 ## RES-CLFs
 According to SOURCE
