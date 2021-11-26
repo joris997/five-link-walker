@@ -46,7 +46,8 @@ According to [3]
 
 
 ## Sources
-[1]: @article{westervelt2003hybrid,
+[1]: 
+@article{westervelt2003hybrid,
   title={Hybrid zero dynamics of planar biped walkers},
   author={Westervelt, Eric R and Grizzle, Jessy W and Koditschek, Daniel E},
   journal={IEEE transactions on automatic control},
