@@ -2,7 +2,12 @@
 Stable locomotion using IO linearization, RES-CLFs, and TSC
 
 ## System of equations
+We consider a standard system of equations.
 <a href="https://www.codecogs.com/eqnedit.php?latex=\dot{x}&space;=&space;f(x)&space;&plus;&space;g(x)u" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\dot{x}&space;=&space;f(x)&space;&plus;&space;g(x)u" title="\dot{x} = f(x) + g(x)u" /></a>
+
+where
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=x&space;=&space;\begin{bmatrix}&space;q&space;\\&space;\dot{q}\end{bmatrix}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?x&space;=&space;\begin{bmatrix}&space;q&space;\\&space;\dot{q}\end{bmatrix}" title="x = \begin{bmatrix} q \\ \dot{q}\end{bmatrix}" /></a>
 
 
 ## Input-output linearization
