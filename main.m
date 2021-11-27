@@ -1,6 +1,5 @@
 close all; clear all; clc;
 addpath('generated')
-addpath('generated/CBF')
 addpath('controllers')
 
 %% Load modelling parameters
@@ -31,27 +30,25 @@ y0 = [-2.5195
       -1.5642
        0.4000];
    
-% If you make the joint velocities zero, the walker certainly won't walk
-% y0(6:10) = zeros(5,1);
-y0(6:10) = 0.5*y0(6:10);
+% y0(6:10) = 0.5*y0(6:10);
 
 xy = pJointse([y0(1:5);[0;0]],p);
 xyB = pBodiese([y0(1:5);[0;0]],p);
 
-figure(99)
-clf
-hold on;
-plot([xy(1,1);xy(1,2)],[xy(2,1);xy(2,2)],'c','LineWidth',3)
-plot([xy(1,2);xy(1,3)],[xy(2,2);xy(2,3)],'b','LineWidth',3)
-
-plot([xy(1,3);xyB(1,3)],[xy(2,3);xyB(2,3)],'k','LineWidth',3)
-
-plot([xy(1,3);xy(1,4)],[xy(2,3);xy(2,4)],'g','LineWidth',3)
-plot([xy(1,4);xy(1,5)],[xy(2,4);xy(2,5)],'r','LineWidth',3)
-yline(0)
-xlim([-2 2])
-ylim([-1.5 1.5])
-drawnow
+% figure(99)
+% clf
+% hold on;
+% plot([xy(1,1);xy(1,2)],[xy(2,1);xy(2,2)],'c','LineWidth',3)
+% plot([xy(1,2);xy(1,3)],[xy(2,2);xy(2,3)],'b','LineWidth',3)
+% 
+% plot([xy(1,3);xyB(1,3)],[xy(2,3);xyB(2,3)],'k','LineWidth',3)
+% 
+% plot([xy(1,3);xy(1,4)],[xy(2,3);xy(2,4)],'g','LineWidth',3)
+% plot([xy(1,4);xy(1,5)],[xy(2,4);xy(2,5)],'r','LineWidth',3)
+% yline(0)
+% xlim([-2 2])
+% ylim([-1.5 1.5])
+% drawnow
    
 %% Control parameters
 H0 = [eye(4) zeros(4,1)];
@@ -85,13 +82,13 @@ opt = odeset('Events',@switchingSurface,...
              'AbsTol',1e-5);
 
 % controller = 'IO';
-controller = 'CLF_QP';
-% controller = 'TSC_QP';
+% controller = 'CLF_QP';
+controller = 'TSC_QP';
 
 global step downstep failure
 failure = false;
 downstep = 0.00;
-for step = 1:4
+for step = 1:10
     jointPositions = pJoints(y0(1:5),p);
     p_swingxy = jointPositions(:,end);
 
@@ -178,30 +175,34 @@ end
 figure; hold on; grid on;
 plot(time,AngMom(:,3))
 
-%% Animation
-figure(100)
-timei = 0.010;
-for i = 1:length(time)
-    if time(i) > timei
-        xy = pJointse([states(i,1:5)';stFoot(i,:)'],p);
-        xyB = pBodiese([states(i,1:5)';stFoot(i,:)'],p);
+save('TSC.mat','states','time','stFoot','p')
 
-        figure(100)
-        clf
-        hold on;
-        plot([xy(1,1);xy(1,2)],[xy(2,1);xy(2,2)],'c','LineWidth',3)
-        plot([xy(1,2);xy(1,3)],[xy(2,2);xy(2,3)],'b','LineWidth',3)
-        
-        plot([xy(1,3);xyB(1,3)],[xy(2,3);xyB(2,3)],'k','LineWidth',3)
-        
-        plot([xy(1,3);xy(1,4)],[xy(2,3);xy(2,4)],'g','LineWidth',3)
-        plot([xy(1,4);xy(1,5)],[xy(2,4);xy(2,5)],'r','LineWidth',3)
-        yline(0)
-        xlim([-2 2])
-        ylim([-1.5 1.5])
-        drawnow
-        
-        timei = timei + 0.01;
-    end
-end
+% createAnimation(states,time,stFoot,p)
+
+% %% Animation
+% figure(100)
+% timei = 0.010;
+% for i = 1:length(time)
+%     if time(i) > timei
+%         xy = pJointse([states(i,1:5)';stFoot(i,:)'],p);
+%         xyB = pBodiese([states(i,1:5)';stFoot(i,:)'],p);
+% 
+%         figure(100)
+%         clf
+%         hold on;
+%         plot([xy(1,1);xy(1,2)],[xy(2,1);xy(2,2)],'c','LineWidth',3)
+%         plot([xy(1,2);xy(1,3)],[xy(2,2);xy(2,3)],'b','LineWidth',3)
+%         
+%         plot([xy(1,3);xyB(1,3)],[xy(2,3);xyB(2,3)],'k','LineWidth',3)
+%         
+%         plot([xy(1,3);xy(1,4)],[xy(2,3);xy(2,4)],'g','LineWidth',3)
+%         plot([xy(1,4);xy(1,5)],[xy(2,4);xy(2,5)],'r','LineWidth',3)
+%         yline(0)
+%         xlim([-2 2])
+%         ylim([-1.5 1.5])
+%         drawnow
+%         
+%         timei = timei + 0.01;
+%     end
+% end
 

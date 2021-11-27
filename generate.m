@@ -232,35 +232,35 @@ dY = [dLst dLsw dbetasw dq5]';
 
 h = Y - Ydes;
 
-f = simplify([dqs;
+f_vector = simplify([dqs;
      inv_D_mtx_sym*(-C_mtx*dqs - G_vect)]);
-g = simplify([sym(zeros(5,4));
+g_vector = simplify([sym(zeros(5,4));
      inv_D_mtx_sym*B_mtx]);
  
 dhdq = jacobian(h - Ydes,[qs; dqs]);
 
-Lfh = dhdq*f;
+Lfh = dhdq*f_vector;
 LgLfh = jacobian(Lfh,x);    % misses *f and *g, too large sym file
 LfLfh = jacobian(Lfh,x);
 
 % matlabFunction(h,'Vars',{qs,alpha,p},'File','generated/h_vector')
-% matlabFunction(f,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/f_vector')
-% matlabFunction(g,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/g_vector')
+% matlabFunction(f_vector,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/f_vector')
+% matlabFunction(g_vector,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/g_vector')
 % matlabFunction(Lfh,'Vars',{qs,dqs,alpha,inv_D_mtx_sym,p},'File','generated/Lfh_vector')
 % matlabFunction(LfLfh,'Vars',{qs,dqs,alpha,inv_D_mtx_sym,p},'File','generated/LfLfh_vector')
 % matlabFunction(LgLfh,'Vars',{qs,dqs,alpha,inv_D_mtx_sym,p},'File','generated/LgLfh_matrix')
 
 %% Y = based on zcom
-f = simplify([dqs;
+f_vector = simplify([dqs;
      inv_D_mtx_sym*(-C_mtx*dqs - G_vect)]);
-g = simplify([sym(zeros(5,4));
+g_vector = simplify([sym(zeros(5,4));
      inv_D_mtx_sym*B_mtx]);
 
 Ya = simplify([pCoM(2) pfoot2(1) pfoot2(2) q5]');
 dYa = jacobian(Ya,qs)*dqs;
 % ddYa = jacobian(dYa,qs)*dqs + jacobian(dYa,dqs)*ddqs;
 
-Lfh = simplify(jacobian(Ya,[qs;dqs])*f);
+Lfh = simplify(jacobian(Ya,[qs;dqs])*f_vector);
 LfLfh_nof = jacobian(Lfh,[qs;dqs]);
 LgLfh_nog = jacobian(Lfh,[qs;dqs]);
 
@@ -272,8 +272,8 @@ LgLfh_nog = jacobian(Lfh,[qs;dqs]);
 % matlabFunction(LfLfh_nof,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/SSPSLIP/LfLfh_nof_SSP_vector')
 % matlabFunction(LgLfh_nog,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/SSPSLIP/LgLfh_nog_SSP_matrix')
 
-matlabFunction(f,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/f_vector')
-matlabFunction(g,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/g_vector')
+% matlabFunction(f,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/f_vector')
+% matlabFunction(g,'Vars',{qs,dqs,inv_D_mtx_sym,p},'File','generated/g_vector')
 
 %% TSC-QP
 Y = [q1 q2 q3 q4]';
@@ -356,33 +356,33 @@ Epot = M_fem*g*(pfem1(2) + pfem2(2)) + ...
        M_torso*g*(ptorso(2));
    
 %% Generate system matrices
-% Ge_vect = simplify(jacobian(Epot,qe).');
-% 
-% for i = 1:N
-%     for j = 1:N
-%         De_mtx(i,j) = diff(diff(Ekin,dqe(i)),dqe(j));
-%     end
-% end
-% De_mtx = simplify(De_mtx);
-% 
-% N = length(qs);
-% for j=1:N
-% 	for k=1:N
-% 		for i=1:N
-% 			Ctemp(i) = (diff(De_mtx(k,j),qs(i))+diff(De_mtx(k,i),qs(j))-diff(De_mtx(i,j),qs(k)))*dqs(i);
-%         end
-%         Ce_mtx(k,j) = 1/2*sum(Ctemp);
-% 	end
-% end
-% Ce_mtx=simplify(Ce_mtx);
-% 
-% Ee_mtx = jacobian(pfoot2,qs);
+Ge_vect = simplify(jacobian(Epot,qe).');
+
+for i = 1:N
+    for j = 1:N
+        De_mtx(i,j) = diff(diff(Ekin,dqe(i)),dqe(j));
+    end
+end
+De_mtx = simplify(De_mtx);
+
+N = length(qs);
+for j=1:N
+	for k=1:N
+		for i=1:N
+			Ctemp(i) = (diff(De_mtx(k,j),qs(i))+diff(De_mtx(k,i),qs(j))-diff(De_mtx(i,j),qs(k)))*dqs(i);
+        end
+        Ce_mtx(k,j) = 1/2*sum(Ctemp);
+	end
+end
+Ce_mtx=simplify(Ce_mtx);
+
+Ee_mtx = jacobian(pfoot2,qs);
 
 %% Create functions
-% matlabFunction(De_mtx,'Vars',{qs,p},'File','generated/De_matrix')
-% matlabFunction(Ce_mtx,'Vars',{qs,dqs,p},'File','generated/Ce_matrix')
-% matlabFunction(Ge_vect,'Vars',{qs,p},'File','generated/Ge_vector')
-% matlabFunction(Ee_mtx,'Vars',{qs,p},'File','generated/Ee_matrix')
+matlabFunction(De_mtx,'Vars',{qs,p},'File','generated/De_matrix')
+matlabFunction(Ce_mtx,'Vars',{qs,dqs,p},'File','generated/Ce_matrix')
+matlabFunction(Ge_vect,'Vars',{qs,p},'File','generated/Ge_vector')
+matlabFunction(Ee_mtx,'Vars',{qs,p},'File','generated/Ee_matrix')
 
 matlabFunction(pJointse,'Vars',{qe,p},'File','generated/pJointse');
 matlabFunction(pBodiese,'Vars',{qe,p},'File','generated/pBodiese');

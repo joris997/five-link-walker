@@ -33,28 +33,32 @@ Bbar = Lf2h - ddhdt;
 
 %% TSC optimization
 cvx_begin quiet
-    variable u(4,1)
+%     variable u(4,1)
 %     v = LgLfh*u + Lf2h;
     
-    Y    = Y_vect - hd;
-    dY  = Jy_mtx*dq - dhdt;
-    ddY = Jy_mtx*(Aq_mtx*u + bq_vec) + dJy_mtx*dq  - ddhdt;
-    ddYstar = -Kp*Y - Kd*dY;
-    % dYdes = ddY2des = -Kp*Y2 - Kd*dY2
-    % where
-    %   Y2 = Ya2 - Yd2 = h
-    %   dY2 = LfY2 - dYd2 = Lfh
-    %   Kp = 0.50*eye(4)
-    %   Kd = 0.86*eye(4)
-%     dYdes = -Kp*Y - Kd*dY;
-    
-    % Control signal defined; v = LgLfh*u + Lf2h
-%     v = LgLfh*u + Lf2h;
-    
-    minimize( (ddY - ddYstar)'*(ddY - ddYstar) )
+%     Y    = Y_vect - hd;
+%     dY  = Jy_mtx*dq - dhdt;
+%     ddY = Jy_mtx*(Aq_mtx*u + bq_vec) + dJy_mtx*dq  - ddhdt;
+%     ddYstar = -Kp*Y - Kd*dY;
+% 
+%     minimize( (ddY - ddYstar)'*(ddY - ddYstar) )
+
+
+%     variable v(4,1)
+%     dYdes = H0*dq - dhdt;
 %     minimize( (Abar*v + Bbar - dYdes)'*(Abar*v + Bbar - dYdes) )
-%     -200*ones(4,1) <= u <= 200*ones(4,1);
+
+
+    variable u(4,1)
+    eta = [h; Lfh];
+    by = ddhdt - dJy_mtx*dq - Kp*h - Kd*Lfh;
+    
+    H = Jy_mtx'*eye(4)*Jy_mtx;
+    g = -Jy_mtx'*eye(4)*by;
+    
+    minimize( 0.5*u'*H*u + g'*u )
 cvx_end
+% u = inv(LgLfh)*(v-Lf2h)
 u
 end
 
