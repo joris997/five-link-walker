@@ -87,7 +87,7 @@ controller = 'IO';
 
 global step downstep failure
 failure = false;
-downstep = 0.00;
+downstep = 0.18;
 for step = 1:9
     jointPositions = pJoints(y0(1:5),p);
     p_swingxy = jointPositions(:,end);
