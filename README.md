@@ -1,4 +1,7 @@
 # five-link-walker
+
+![out](https://user-images.githubusercontent.com/56355937/143733180-be915d45-0b1b-411a-adb6-ae3bd71dca72.gif)
+
 Stable locomotion using IO linearization, CLFs, and TSC. This was initially made to get a better understanding of bipedal robotic locomotion and get familiar with some of the 'standard' basic control approaches to  5-link walkers. These 5-link walkers are close to being the easiest, morphologically sound walker. For a detailed description of the biped in question, please refer to [1] which is well documented
 
 ![Screenshot from 2021-11-26 14-44-58](https://user-images.githubusercontent.com/56355937/143659579-b9a3b0bb-2a8c-4a35-99f0-e7492538fdec.png)
