@@ -1,16 +1,23 @@
 function createAnimation(states,time,stFoot,p)
-writerObj = VideoWriter('out.avi');
-writerObj.FrameRate = 60;
-open(writerObj)
+video = true;
+if video
+    writerObj = VideoWriter('out.avi');
+    writerObj.FrameRate = 60;
+    open(writerObj)
+end
 
 %% Angular momentum
-    masses   = [p(7) p(6) p(5) p(6) p(7)];
-    inertias = [p(10) p(9) p(8) p(9) p(10)];
+%     masses   = [p(7) p(6) p(5) p(6) p(7)];
+%     inertias = [p(10) p(9) p(8) p(9) p(10)];
+    masses   = [p(6) p(7) p(5) p(7) p(6)];
+    inertias = [p(9) p(10) p(8) p(10) p(9)];
     
     AngMom = zeros(length(time),3);
     for i = 1:length(time)
+        % relative to absolute orientations/ang velocities
         qL = q_to_qL(states(i,1:5)',states(i,6:10)');
-        phi = [qL(6) qL(8) qL(7) qL(9) qL(10)];
+%         phi = [qL(6) qL(8) qL(7) qL(9) qL(10)];
+        phi = [qL(8) qL(6) qL(10) qL(7) qL(9)];
 
         xyJ  = [pJoints(states(i,1:5)',p); zeros(1,5)];
         xyB  = [pBodies(states(i,1:5)',p); zeros(1,5)];
@@ -20,8 +27,9 @@ open(writerObj)
         H = 0;
         for b = 1:size(xyB,2)
             r = xyB(:,b);
-
-            H = H + cross(r,masses(b).*vxyB(:,b)) + inertias(b)*phi(b);
+            v = vxyB(:,b);
+            
+            H = H + cross(r,masses(b).*-v) + inertias(b)*phi(b);
         end
         AngMom(i,:) = H';
     end
@@ -43,8 +51,12 @@ open(writerObj)
     timei = 0.010;
     for i = 1:length(time)
         if time(i) > timei
-            if i >= stepIdx
-                step = step + 1;
+            try
+                if i >= stepIdx(step+1)
+                    step = step + 1;
+                end
+            catch
+                step = step;
             end
             
             % walker
@@ -71,18 +83,18 @@ open(writerObj)
                 plot([xy(1,4);xy(1,5)],[xy(2,4);xy(2,5)],'c','LineWidth',6)
             end
             yline(0)
-            xlim([-0.5 2.5])
+            xlim([0.0 3.0])
             ylim([-0.5 1.5])
-            drawnow
             
             % CoM velocity
             subplot(3,5,[4 5]); cla; hold on; grid on;
-            plot(time(1:i),vCOM(1:i,1),'r','LineWidth',2)
             plot(time(i),vCOM(i,1),'bo','MarkerSize',12,'MarkerFaceColor','b')
-            plot(time(1:i),vCOM(1:i,2),'b','LineWidth',2)
             plot(time(i),vCOM(i,2),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlabel('time'); ylabel('CoM velocity [m/s]');
+            plot(time(1:i),vCOM(1:i,1),'r','LineWidth',2)
+            plot(time(1:i),vCOM(1:i,2),'b','LineWidth',2)
+            xlabel('time [s]'); ylabel('CoM velocity [m/s]');
             title('CoM velocity as a function of time')
+            legend('$\dot{x}_{CoM}$','$\dot{z}_{CoM}$','Interpreter','latex')
             xlim([0 max(time)])
             ylim([min([vCOM(:,1);vCOM(:,2)]) max([vCOM(:,1);vCOM(:,2)])])
             
@@ -90,61 +102,37 @@ open(writerObj)
             subplot(3,5,[9 10]); cla; hold on; grid on;
             plot(time(1:i),AngMom(1:i,3),'r','LineWidth',2)
             plot(time(i),AngMom(i,3),'bo','MarkerSize',12,'MarkerFaceColor','b')
-            xlabel('time'); ylabel('Momentum')
-            title('Angular Momentum')
+            xlabel('time [s]'); ylabel('Momentum [kg m^2/s]')
+            title('Angular Momentum around stance foot')
             xlim([0 max(time)])
             ylim([min(AngMom(:,3)) max(AngMom(:,3))])
             
             % states
-            subplot(3,5,11); cla; hold on; grid on;
-            plot(states(1:i,1),states(1:i,1+5),'b','LineWidth',2)
-            plot(states(i,1),states(i,1+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlim([min(states(:,1)) max(states(:,1))])
-            ylim([min(states(:,1+5)) max(states(:,1+5))])
-            xlabel('q'); ylabel('\dot{q}')
-            title('st_{hip}')
-            
-            subplot(3,5,12); cla; hold on; grid on;
-            plot(states(1:i,2),states(1:i,2+5),'b','LineWidth',2)
-            plot(states(i,2),states(i,2+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlim([min(states(:,2)) max(states(:,2))])
-            ylim([min(states(:,2+5)) max(states(:,2+5))])
-            xlabel('q'); ylabel('\dot{q}')
-            title('sw_{hip}')
-            
-            subplot(3,5,13); cla; hold on; grid on;
-            plot(states(1:i,3),states(1:i,3+5),'b','LineWidth',2)
-            plot(states(i,3),states(i,3+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlim([min(states(:,3)) max(states(:,3))])
-            ylim([min(states(:,3+5)) max(states(:,3+5))])
-            xlabel('q'); ylabel('\dot{q}')
-            title('st_{knee}')
-            
-            subplot(3,5,14); cla; hold on; grid on;
-            plot(states(1:i,4),states(1:i,4+5),'b','LineWidth',2)
-            plot(states(i,4),states(i,4+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlim([min(states(:,4)) max(states(:,4))])
-            ylim([min(states(:,4+5)) max(states(:,4+5))])
-            xlabel('q'); ylabel('\dot{q}')
-            title('sw_{knee}')
-            
-            subplot(3,5,15); cla; hold on; grid on;
-            plot(states(1:i,5),states(1:i,5+5),'b','LineWidth',2)
-            plot(states(i,5),states(i,5+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
-            xlim([min(states(:,5)) max(states(:,5))])
-            ylim([min(states(:,5+5)) max(states(:,5+5))])
-            xlabel('q'); ylabel('\dot{q}')
-            title('pelvis')
-            
+            coords = {'st_{hip}','sw_{hip}','st_{knee}','sw_{knee}','pelvis'};
+            for coord = 1:5
+                subplot(3,5,10+coord); cla; hold on; grid on;
+                plot(states(1:i,coord),states(1:i,coord+5),'b','LineWidth',2)
+                plot(states(i,coord),states(i,coord+5),'ro','MarkerSize',12,'MarkerFaceColor','r')
+                xlim([min(states(:,coord)) max(states(:,coord))])
+                ylim([min(states(:,coord+5)) max(states(:,coord+5))])
+                xlabel('$q$ [rad]','Interpreter','latex'); ylabel('$\dot{q}$ [rad/s]','Interpreter','latex')
+                title(coords{coord})
+            end            
+            drawnow
+            set(gca,'FontSize',12)
             
             timei = timei + 0.0167;
             
-            frame = getframe(gcf);
-            writeVideo(writerObj,frame);
+            if video
+                frame = getframe(gcf);
+                writeVideo(writerObj,frame);
+            end
         end
     end
     
     hold off
-    close(writerObj);
+    if video
+        close(writerObj);
+    end
 end
 

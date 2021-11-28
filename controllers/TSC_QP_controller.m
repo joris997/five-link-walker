@@ -53,8 +53,9 @@ cvx_begin quiet
     eta = [h; Lfh];
     by = ddhdt - dJy_mtx*dq - Kp*h - Kd*Lfh;
     
-    H = Jy_mtx'*eye(4)*Jy_mtx;
-    g = -Jy_mtx'*eye(4)*by;
+    H = Jy_mtx*Jy_mtx';
+    g = -Jy_mtx'*by;
+    g = g(1:4);
     
     minimize( 0.5*u'*H*u + g'*u )
 cvx_end
