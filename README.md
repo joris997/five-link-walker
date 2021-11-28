@@ -1,12 +1,12 @@
 # five-link-walker
 
-![out](https://user-images.githubusercontent.com/56355937/143733180-be915d45-0b1b-411a-adb6-ae3bd71dca72.gif)
-
 Stable locomotion using IO linearization, CLFs, and TSC. This was initially made to get a better understanding of bipedal robotic locomotion and get familiar with some of the 'standard' basic control approaches to  5-link walkers. These 5-link walkers are close to being the easiest, morphologically sound walker. For a detailed description of the biped in question, please refer to [1] which is well documented
 
-![Screenshot from 2021-11-26 14-44-58](https://user-images.githubusercontent.com/56355937/143659579-b9a3b0bb-2a8c-4a35-99f0-e7492538fdec.png)
+![out](https://user-images.githubusercontent.com/56355937/143733235-e1ed623b-805c-4228-b999-b7de965b1ac2.gif)
 
 The 5-link walker code ('main.m') allows for setting a down-step height to analyze some heuristic version of the robustness of the control strategies, affecting by controller gains and other decision variables. Nothing too formal though but fun to play around with!
+
+![Screenshot from 2021-11-26 14-44-58](https://user-images.githubusercontent.com/56355937/143659579-b9a3b0bb-2a8c-4a35-99f0-e7492538fdec.png)
 
 ## Usage:
 Just run 'main.m'. You can change the controller type before the main loop by changing the string 'controller' on line 100. If you wish to make changes to the underlying biped model, make the changes in 'generate.m' and run it again (this will take a long time with symbolic equations and simplyfing them!).
